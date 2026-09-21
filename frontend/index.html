@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StockAnalyzer7</title>
+<meta name="description" content="Year-over-year returns per holding and fund look-through to your effective position in each base asset.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='13' font-size='13'>📊</text></svg>">
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<header class="app">
+  <div class="header-inner">
+    <div class="brand">StockAnalyzer7 <span>portfolio returns &amp; look-through</span></div>
+    <div class="header-spacer"></div>
+    <span class="badge" id="provider-badge" hidden><span class="dot"></span><span id="provider-text"></span></span>
+    <button class="ghost" id="theme-toggle" title="Switch between light and dark" aria-label="Switch theme">◐</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ------------------------------------------------------------ setup -->
+  <section class="card" id="setup">
+    <h2>Your holdings</h2>
+    <p class="sub">
+      Everything stays on this machine. Import a CSV exported from your broker, or build the
+      list by hand.
+    </p>
+    <div class="row">
+      <label class="btn" for="csv-input">Import CSV…</label>
+      <input type="file" id="csv-input" accept=".csv,text/csv">
+      <button id="load-sample">Load sample portfolio</button>
+      <button id="load-saved">Open saved</button>
+      <button id="save-portfolio" disabled>Save</button>
+      <button id="export-csv" disabled>Export CSV</button>
+      <div class="header-spacer"></div>
+      <button class="primary" id="analyze" disabled>Analyze</button>
+    </div>
+    <p class="hint">
+      Recognized columns: <code>symbol</code>, <code>quantity</code>,
+      <code>cost_per_share</code> (or <code>cost basis</code> for the lot total),
+      <code>purchase_date</code>, <code>account</code>. One row per purchase lot —
+      several rows for the same ticker are combined, and the individual dates drive the
+      money-weighted return.
+    </p>
+
+    <div id="holdings-editor" hidden>
+      <div class="table-scroll" style="margin-top:16px">
+        <table id="lots-table">
+          <thead>
+            <tr>
+              <th>Symbol</th><th class="num">Quantity</th><th class="num">Cost / share</th>
+              <th>Purchase date</th><th>Account</th><th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <label class="field">Symbol<input type="text" id="new-symbol" placeholder="AAPL" size="8"></label>
+        <label class="field">Quantity<input type="number" id="new-qty" step="any" placeholder="100" size="8"></label>
+        <label class="field">Cost / share<input type="number" id="new-cost" step="any" placeholder="150.25" size="8"></label>
+        <label class="field">Purchase date<input type="date" id="new-date"></label>
+        <label class="field">Account<input type="text" id="new-account" placeholder="Taxable" size="10"></label>
+        <button id="add-lot">Add lot</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="notices" id="notices"></div>
+
+  <!-- ---------------------------------------------------------- results -->
+  <div id="results" hidden>
+    <div class="kpis" id="kpis"></div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tab-returns" aria-controls="panel-returns" aria-selected="true">Returns by holding</button>
+      <button class="tab" role="tab" id="tab-base" aria-controls="panel-base" aria-selected="false">Effective base assets</button>
+      <button class="tab" role="tab" id="tab-alloc" aria-controls="panel-alloc" aria-selected="false">Allocation</button>
+      <button class="tab" role="tab" id="tab-funds" aria-controls="panel-funds" aria-selected="false">Fund data quality</button>
+    </div>
+
+    <!-- Returns -->
+    <section class="panel" id="panel-returns" role="tabpanel" aria-labelledby="tab-returns">
+      <div class="card">
+        <h2>Year-over-year return, per holding</h2>
+        <p class="sub">
+          Each cell is the security's total return (price plus dividends) for that calendar
+          year. Switch to <em>your</em> return to see what your own money earned instead —
+          money-weighted, so the size and timing of each purchase counts.
+        </p>
+        <div class="row" style="margin-bottom:14px">
+          <label class="field">Show
+            <select id="yoy-mode">
+              <option value="market">The security's return</option>
+              <option value="position">My return on this position</option>
+            </select>
+          </label>
+          <div class="legend" style="margin:0 0 0 8px; align-self:flex-end">
+            <span class="item"><span class="swatch" id="lg-neg"></span> loss</span>
+            <span class="item"><span class="swatch" id="lg-zero"></span> flat</span>
+            <span class="item"><span class="swatch" id="lg-pos"></span> gain</span>
+            <span class="item" style="color:var(--text-muted)">dashed outline = partial year</span>
+          </div>
+        </div>
+        <div class="table-scroll"><table id="returns-table"><thead></thead><tbody></tbody></table></div>
+      </div>
+
+      <div class="card">
+        <h2>Position performance</h2>
+        <p class="sub">
+          Annualized return is money-weighted (XIRR) over your actual purchase dates, which
+          is the honest way to compare a position you've held for six years with one you
+          opened last quarter.
+        </p>
+        <div class="table-scroll"><table id="perf-table"><thead></thead><tbody></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- Look-through -->
+    <section class="panel" id="panel-base" role="tabpanel" aria-labelledby="tab-base" hidden>
+      <div class="card">
+        <h2>Your effective position in each base asset</h2>
+        <p class="sub">
+          Every ETF and fund is unwound into the securities it actually holds — recursively,
+          so a fund of funds is followed through both layers. A company you own directly
+          <em>and</em> through an index fund shows up once, with the two parts added together.
+        </p>
+        <div class="row" style="margin-bottom:12px">
+          <label class="field">Undisclosed fund weight
+            <select id="scale-mode">
+              <option value="report">Report it separately (accurate)</option>
+              <option value="scale">Spread it across known holdings (estimate)</option>
+            </select>
+          </label>
+          <label class="field">Show
+            <select id="base-count">
+              <option value="20">Top 20</option>
+              <option value="35">Top 35</option>
+              <option value="9999">Everything</option>
+            </select>
+          </label>
+        </div>
+        <div class="legend">
+          <span class="item"><span class="swatch" style="background:var(--series-1)"></span> Held directly</span>
+          <span class="item"><span class="swatch" style="background:var(--series-2)"></span> Held through funds</span>
+        </div>
+        <div class="chart" id="base-chart"></div>
+      </div>
+
+      <div class="card">
+        <h2>Full breakdown</h2>
+        <p class="sub">Where each exposure comes from, and how much of it is hidden inside a fund.</p>
+        <div class="table-scroll"><table id="base-table"><thead></thead><tbody></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- Allocation -->
+    <section class="panel" id="panel-alloc" role="tabpanel" aria-labelledby="tab-alloc" hidden>
+      <div class="card">
+        <h2>Asset class</h2>
+        <p class="sub">Measured after look-through, so a balanced fund contributes to bonds and equity separately.</p>
+        <div id="alloc-class"></div>
+      </div>
+      <div class="card">
+        <h2>Sector</h2>
+        <p class="sub">Sector of every underlying company, not of the funds you bought.</p>
+        <div id="alloc-sector"></div>
+      </div>
+      <div class="card">
+        <h2>Country</h2>
+        <div id="alloc-country"></div>
+      </div>
+    </section>
+
+    <!-- Fund data -->
+    <section class="panel" id="panel-funds" role="tabpanel" aria-labelledby="tab-funds" hidden>
+      <div class="card">
+        <h2>How much of each fund we could see</h2>
+        <p class="sub">
+          Free data feeds publish only a fund's ten largest positions — often a third of a
+          broad index fund. Everything beyond that is reported as undisclosed rather than
+          guessed at. To get to 100%, download the fund's own holdings file from the issuer
+          and add it below.
+        </p>
+        <div class="table-scroll"><table id="coverage-table"><thead></thead><tbody></tbody></table></div>
+        <div class="row" style="margin-top:16px">
+          <label class="field">Fund symbol<input type="text" id="holdings-symbol" placeholder="VOO" size="8"></label>
+          <label class="btn" for="holdings-input">Upload holdings CSV…</label>
+          <input type="file" id="holdings-input" accept=".csv,text/csv">
+        </div>
+        <p class="hint">
+          Issuers publish these free: iShares and SPDR link a “Holdings” CSV on each fund
+          page; Vanguard offers one under “Portfolio &amp; Management”. Any file with a name
+          or ticker column and a weight column will parse.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <div class="empty-state" id="empty-state">
+    <h3>No portfolio loaded</h3>
+    <p>Import a CSV or load the sample portfolio to get started.</p>
+  </div>
+
+</div>
+
+<div class="tooltip" id="tooltip" hidden role="status" aria-live="polite"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
