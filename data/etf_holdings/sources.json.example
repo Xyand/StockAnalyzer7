@@ -1,0 +1,4 @@
+{
+  "_comment": "Copy to sources.json and fill in public holdings-CSV URLs from each issuer's fund page.",
+  "IVV": "https://www.ishares.com/us/products/239726/ishares-core-sp-500-etf/1467271812596.ajax?fileType=csv&fileName=IVV_holdings&dataType=fund"
+}

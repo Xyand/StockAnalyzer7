@@ -1,0 +1,14 @@
+Symbol,Quantity,Cost Per Share,Purchase Date,Account,Note
+AAPL,120,43.10,2019-03-15,Taxable,Initial position
+AAPL,60,128.40,2021-06-10,Taxable,Added on dip
+MSFT,80,135.20,2019-08-02,Taxable,
+NVDA,150,14.90,2020-01-21,Taxable,
+VOO,210,268.50,2019-05-20,Roth IRA,Core index
+VOO,90,352.10,2022-10-14,Roth IRA,Bear market add
+QQQ,75,201.30,2020-04-06,Taxable,
+VXUS,300,52.40,2021-02-11,Roth IRA,
+BND,250,84.10,2021-09-30,Roth IRA,Ballast
+VT,180,79.20,2022-01-18,401k,
+GLD,40,168.00,2023-03-08,Taxable,Hedge
+SCHD,220,68.30,2022-07-22,Roth IRA,
+CASH,4800,1.00,,Taxable,Settlement cash

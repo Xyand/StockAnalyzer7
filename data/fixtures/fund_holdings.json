@@ -1,0 +1,543 @@
+{
+  "AGG": {
+    "as_of": "2025-12-26",
+    "holdings": [
+      {
+        "asset_class": "bond",
+        "name": "U.S. Treasury Notes & Bonds",
+        "symbol": null,
+        "weight": 0.445
+      },
+      {
+        "asset_class": "bond",
+        "name": "U.S. Government Mortgage-Backed Securities",
+        "symbol": null,
+        "weight": 0.261
+      },
+      {
+        "asset_class": "bond",
+        "name": "Investment-Grade Corporate Credit",
+        "symbol": null,
+        "weight": 0.244
+      },
+      {
+        "asset_class": "bond",
+        "name": "Government Agency & Supranational Debt",
+        "symbol": null,
+        "weight": 0.031
+      },
+      {
+        "asset_class": "cash",
+        "name": "Cash & Cash Equivalents",
+        "symbol": null,
+        "weight": 0.019
+      }
+    ],
+    "partial": false,
+    "source": "fixture:issuer",
+    "symbol": "AGG"
+  },
+  "AOR": {
+    "as_of": "2025-12-26",
+    "holdings": [
+      {
+        "name": "Vanguard Total Stock Market ETF",
+        "symbol": "VTI",
+        "weight": 0.418
+      },
+      {
+        "name": "Vanguard Total International Stock ETF",
+        "symbol": "VXUS",
+        "weight": 0.241
+      },
+      {
+        "name": "iShares Core U.S. Aggregate Bond ETF",
+        "symbol": "AGG",
+        "weight": 0.276
+      },
+      {
+        "asset_class": "bond",
+        "name": "International Bond Sleeve",
+        "symbol": null,
+        "weight": 0.061
+      },
+      {
+        "asset_class": "cash",
+        "name": "Cash & Cash Equivalents",
+        "symbol": null,
+        "weight": 0.004
+      }
+    ],
+    "partial": false,
+    "source": "fixture:issuer",
+    "symbol": "AOR"
+  },
+  "BND": {
+    "as_of": "2025-12-26",
+    "holdings": [
+      {
+        "asset_class": "bond",
+        "name": "U.S. Treasury Notes & Bonds",
+        "symbol": null,
+        "weight": 0.461
+      },
+      {
+        "asset_class": "bond",
+        "name": "U.S. Government Mortgage-Backed Securities",
+        "symbol": null,
+        "weight": 0.208
+      },
+      {
+        "asset_class": "bond",
+        "name": "Investment-Grade Corporate Credit",
+        "symbol": null,
+        "weight": 0.239
+      },
+      {
+        "asset_class": "bond",
+        "name": "Government Agency & Supranational Debt",
+        "symbol": null,
+        "weight": 0.056
+      },
+      {
+        "asset_class": "cash",
+        "name": "Cash & Cash Equivalents",
+        "symbol": null,
+        "weight": 0.036
+      }
+    ],
+    "partial": false,
+    "source": "fixture:issuer",
+    "symbol": "BND"
+  },
+  "GLD": {
+    "as_of": "2025-12-26",
+    "holdings": [
+      {
+        "asset_class": "commodity",
+        "name": "Gold Bullion",
+        "symbol": null,
+        "weight": 0.9982
+      },
+      {
+        "asset_class": "cash",
+        "name": "Cash & Cash Equivalents",
+        "symbol": null,
+        "weight": 0.0018
+      }
+    ],
+    "partial": false,
+    "source": "fixture:issuer",
+    "symbol": "GLD"
+  },
+  "IEMG": {
+    "as_of": "2025-12-26",
+    "holdings": [
+      {
+        "name": "Taiwan Semiconductor Manufacturing Company Limited",
+        "symbol": "TSM",
+        "weight": 0.0932
+      },
+      {
+        "name": "Alibaba Group Holding Limited",
+        "symbol": "BABA",
+        "weight": 0.0281
+      },
+      {
+        "name": "Tencent Holdings Limited",
+        "symbol": "0700.HK",
+        "weight": 0.0412
+      },
+      {
+        "name": "Samsung Electronics Co., Ltd.",
+        "symbol": "005930.KS",
+        "weight": 0.0301
+      },
+      {
+        "name": "Infosys Limited",
+        "symbol": "INFY",
+        "weight": 0.0091
+      }
+    ],
+    "partial": true,
+    "source": "fixture:issuer",
+    "symbol": "IEMG"
+  },
+  "QQQ": {
+    "as_of": "2025-12-26",
+    "holdings": [
+      {
+        "name": "NVIDIA Corporation",
+        "symbol": "NVDA",
+        "weight": 0.0912
+      },
+      {
+        "name": "Apple Inc.",
+        "symbol": "AAPL",
+        "weight": 0.0881
+      },
+      {
+        "name": "Microsoft Corporation",
+        "symbol": "MSFT",
+        "weight": 0.0803
+      },
+      {
+        "name": "Amazon.com, Inc.",
+        "symbol": "AMZN",
+        "weight": 0.0561
+      },
+      {
+        "name": "Meta Platforms, Inc.",
+        "symbol": "META",
+        "weight": 0.0421
+      },
+      {
+        "name": "Broadcom Inc.",
+        "symbol": "AVGO",
+        "weight": 0.0389
+      },
+      {
+        "name": "Alphabet Inc.",
+        "symbol": "GOOGL",
+        "weight": 0.0312
+      },
+      {
+        "name": "Tesla, Inc.",
+        "symbol": "TSLA",
+        "weight": 0.0298
+      },
+      {
+        "name": "Costco Wholesale Corporation",
+        "symbol": "COST",
+        "weight": 0.0251
+      },
+      {
+        "name": "Netflix, Inc.",
+        "symbol": "NFLX",
+        "weight": 0.0198
+      },
+      {
+        "name": "ASML Holding N.V.",
+        "symbol": "ASML",
+        "weight": 0.0081
+      }
+    ],
+    "partial": true,
+    "source": "fixture:issuer",
+    "symbol": "QQQ"
+  },
+  "SCHD": {
+    "as_of": "2025-12-26",
+    "holdings": [
+      {
+        "name": "Exxon Mobil Corporation",
+        "symbol": "XOM",
+        "weight": 0.0431
+      },
+      {
+        "name": "Johnson & Johnson",
+        "symbol": "JNJ",
+        "weight": 0.0402
+      },
+      {
+        "name": "The Procter & Gamble Company",
+        "symbol": "PG",
+        "weight": 0.0398
+      },
+      {
+        "name": "The Home Depot, Inc.",
+        "symbol": "HD",
+        "weight": 0.0389
+      },
+      {
+        "name": "The Coca-Cola Company",
+        "symbol": "KO",
+        "weight": 0.0381
+      },
+      {
+        "name": "PepsiCo, Inc.",
+        "symbol": "PEP",
+        "weight": 0.0374
+      },
+      {
+        "name": "Chevron Corporation",
+        "symbol": "CVX",
+        "weight": 0.0369
+      },
+      {
+        "name": "AbbVie Inc.",
+        "symbol": "ABBV",
+        "weight": 0.0361
+      }
+    ],
+    "partial": true,
+    "source": "fixture:issuer",
+    "symbol": "SCHD"
+  },
+  "VNQ": {
+    "as_of": "2025-12-26",
+    "holdings": [
+      {
+        "name": "Prologis, Inc.",
+        "symbol": "PLD",
+        "weight": 0.0721
+      },
+      {
+        "name": "American Tower Corporation",
+        "symbol": "AMT",
+        "weight": 0.0612
+      },
+      {
+        "name": "Equinix, Inc.",
+        "symbol": "EQIX",
+        "weight": 0.0521
+      },
+      {
+        "name": "Simon Property Group, Inc.",
+        "symbol": "SPG",
+        "weight": 0.0402
+      },
+      {
+        "name": "Realty Income Corporation",
+        "symbol": "O",
+        "weight": 0.0361
+      },
+      {
+        "name": "Public Storage",
+        "symbol": "PSA",
+        "weight": 0.0331
+      }
+    ],
+    "partial": true,
+    "source": "fixture:issuer",
+    "symbol": "VNQ"
+  },
+  "VOO": {
+    "as_of": "2025-12-26",
+    "holdings": [
+      {
+        "name": "NVIDIA Corporation",
+        "symbol": "NVDA",
+        "weight": 0.0741
+      },
+      {
+        "name": "Apple Inc.",
+        "symbol": "AAPL",
+        "weight": 0.0654
+      },
+      {
+        "name": "Microsoft Corporation",
+        "symbol": "MSFT",
+        "weight": 0.0629
+      },
+      {
+        "name": "Amazon.com, Inc.",
+        "symbol": "AMZN",
+        "weight": 0.0398
+      },
+      {
+        "name": "Meta Platforms, Inc.",
+        "symbol": "META",
+        "weight": 0.0287
+      },
+      {
+        "name": "Broadcom Inc.",
+        "symbol": "AVGO",
+        "weight": 0.0246
+      },
+      {
+        "name": "Alphabet Inc.",
+        "symbol": "GOOGL",
+        "weight": 0.0232
+      },
+      {
+        "name": "Tesla, Inc.",
+        "symbol": "TSLA",
+        "weight": 0.0201
+      },
+      {
+        "name": "Berkshire Hathaway Inc.",
+        "symbol": "BRK-B",
+        "weight": 0.0164
+      },
+      {
+        "name": "JPMorgan Chase & Co.",
+        "symbol": "JPM",
+        "weight": 0.0146
+      },
+      {
+        "name": "UnitedHealth Group Incorporated",
+        "symbol": "UNH",
+        "weight": 0.0121
+      },
+      {
+        "name": "Visa Inc.",
+        "symbol": "V",
+        "weight": 0.0104
+      },
+      {
+        "name": "Exxon Mobil Corporation",
+        "symbol": "XOM",
+        "weight": 0.0102
+      },
+      {
+        "name": "Johnson & Johnson",
+        "symbol": "JNJ",
+        "weight": 0.0088
+      },
+      {
+        "name": "The Procter & Gamble Company",
+        "symbol": "PG",
+        "weight": 0.0085
+      },
+      {
+        "name": "The Home Depot, Inc.",
+        "symbol": "HD",
+        "weight": 0.0079
+      }
+    ],
+    "partial": true,
+    "source": "fixture:issuer",
+    "symbol": "VOO"
+  },
+  "VT": {
+    "as_of": "2025-12-26",
+    "holdings": [
+      {
+        "name": "Vanguard Total Stock Market ETF",
+        "symbol": "VTI",
+        "weight": 0.623
+      },
+      {
+        "name": "Vanguard Total International Stock ETF",
+        "symbol": "VXUS",
+        "weight": 0.374
+      },
+      {
+        "asset_class": "cash",
+        "name": "Cash & Cash Equivalents",
+        "symbol": null,
+        "weight": 0.003
+      }
+    ],
+    "partial": false,
+    "source": "fixture:issuer",
+    "symbol": "VT"
+  },
+  "VTI": {
+    "as_of": "2025-12-26",
+    "holdings": [
+      {
+        "name": "NVIDIA Corporation",
+        "symbol": "NVDA",
+        "weight": 0.0662
+      },
+      {
+        "name": "Apple Inc.",
+        "symbol": "AAPL",
+        "weight": 0.0584
+      },
+      {
+        "name": "Microsoft Corporation",
+        "symbol": "MSFT",
+        "weight": 0.0561
+      },
+      {
+        "name": "Amazon.com, Inc.",
+        "symbol": "AMZN",
+        "weight": 0.0355
+      },
+      {
+        "name": "Meta Platforms, Inc.",
+        "symbol": "META",
+        "weight": 0.0256
+      },
+      {
+        "name": "Broadcom Inc.",
+        "symbol": "AVGO",
+        "weight": 0.0219
+      },
+      {
+        "name": "Alphabet Inc.",
+        "symbol": "GOOGL",
+        "weight": 0.0207
+      },
+      {
+        "name": "Tesla, Inc.",
+        "symbol": "TSLA",
+        "weight": 0.0179
+      },
+      {
+        "name": "Berkshire Hathaway Inc.",
+        "symbol": "BRK-B",
+        "weight": 0.0146
+      },
+      {
+        "name": "JPMorgan Chase & Co.",
+        "symbol": "JPM",
+        "weight": 0.013
+      },
+      {
+        "name": "UnitedHealth Group Incorporated",
+        "symbol": "UNH",
+        "weight": 0.0108
+      },
+      {
+        "name": "Visa Inc.",
+        "symbol": "V",
+        "weight": 0.0093
+      }
+    ],
+    "partial": true,
+    "source": "fixture:issuer",
+    "symbol": "VTI"
+  },
+  "VXUS": {
+    "as_of": "2025-12-26",
+    "holdings": [
+      {
+        "name": "Taiwan Semiconductor Manufacturing Company Limited",
+        "symbol": "TSM",
+        "weight": 0.0281
+      },
+      {
+        "name": "ASML Holding N.V.",
+        "symbol": "ASML",
+        "weight": 0.0112
+      },
+      {
+        "name": "Novo Nordisk A/S",
+        "symbol": "NVO",
+        "weight": 0.0081
+      },
+      {
+        "name": "Nestle S.A.",
+        "symbol": "NESN.SW",
+        "weight": 0.0078
+      },
+      {
+        "name": "SAP SE",
+        "symbol": "SAP",
+        "weight": 0.0074
+      },
+      {
+        "name": "Toyota Motor Corporation",
+        "symbol": "7203.T",
+        "weight": 0.0068
+      },
+      {
+        "name": "Alibaba Group Holding Limited",
+        "symbol": "BABA",
+        "weight": 0.0064
+      },
+      {
+        "name": "HSBC Holdings plc",
+        "symbol": "HSBC",
+        "weight": 0.0059
+      }
+    ],
+    "partial": true,
+    "source": "fixture:issuer",
+    "symbol": "VXUS"
+  }
+}

@@ -1,0 +1,347 @@
+/* StockAnalyzer7 — design tokens and layout.
+   Chart colors follow the validated reference palette: categorical hues in
+   fixed slot order, a one-hue sequential ramp for magnitude, and a
+   lightness-matched blue<->red diverging pair (neutral gray midpoint) for the
+   year-by-year return heatmap. Dark mode is selected per mode, not flipped. */
+
+:root {
+  color-scheme: light;
+
+  --surface-1: #fcfcfb;          /* cards, chart surface */
+  --surface-2: #f9f9f7;          /* page plane */
+  --surface-3: #f2f2ef;          /* wells, table header */
+
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.10);
+
+  /* Categorical slots, fixed order — never cycled. */
+  --series-1: #2a78d6;  /* blue */
+  --series-2: #eb6834;  /* orange */
+  --series-3: #1baf7a;  /* aqua */
+  --series-4: #eda100;  /* yellow */
+  --series-5: #e87ba4;  /* magenta */
+  --series-6: #008300;  /* green */
+  --series-7: #4a3aa7;  /* violet */
+  --series-8: #e34948;  /* red */
+  --series-other: #898781;
+
+  /* Sequential (magnitude) — one hue, light to dark. */
+  --seq-100: #cde2fb;
+  --seq-250: #86b6ef;
+  --seq-400: #3987e5;
+  --seq-450: #2a78d6;
+  --seq-550: #1c5cab;
+
+  /* Diverging arms for the returns heatmap, as OKLCH components. */
+  --div-hue-pos: 255.5;
+  --div-hue-neg: 25.2;
+  --div-l-mid: 0.965;
+  --div-l-end: 0.620;
+  --div-c-mid: 0.004;
+  --div-c-pos: 0.163;
+  --div-c-neg: 0.186;
+  --div-ink: #0b0b0b;
+
+  --good: #006300;
+  --bad: #c0332f;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --gap: 16px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --surface-1: #1a1a19;
+    --surface-2: #0d0d0d;
+    --surface-3: #232322;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --border: rgba(255, 255, 255, 0.10);
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --series-4: #c98500;
+    --series-5: #d55181;
+    --series-6: #008300;
+    --series-7: #9085e9;
+    --series-8: #e66767;
+    --seq-100: #184f95;
+    --seq-250: #1c5cab;
+    --seq-400: #2a78d6;
+    --seq-450: #3987e5;
+    --seq-550: #5598e7;
+    --div-hue-pos: 255.1;
+    --div-hue-neg: 24.9;
+    --div-l-mid: 0.280;
+    --div-l-end: 0.500;
+    --div-c-mid: 0.005;
+    --div-c-pos: 0.161;
+    --div-c-neg: 0.191;
+    --div-ink: #ffffff;
+    --good: #0ca30c;
+    --bad: #e66767;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-1: #1a1a19;
+  --surface-2: #0d0d0d;
+  --surface-3: #232322;
+  --text-primary: #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted: #898781;
+  --grid: #2c2c2a;
+  --axis: #383835;
+  --border: rgba(255, 255, 255, 0.10);
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #008300;
+  --series-7: #9085e9;
+  --series-8: #e66767;
+  --seq-100: #184f95;
+  --seq-250: #1c5cab;
+  --seq-400: #2a78d6;
+  --seq-450: #3987e5;
+  --seq-550: #5598e7;
+  --div-hue-pos: 255.1;
+  --div-hue-neg: 24.9;
+  --div-l-mid: 0.280;
+  --div-l-end: 0.500;
+  --div-c-mid: 0.005;
+  --div-c-pos: 0.161;
+  --div-c-neg: 0.191;
+  --div-ink: #ffffff;
+  --good: #0ca30c;
+  --bad: #e66767;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--surface-2);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px 64px; }
+
+/* ---------------------------------------------------------------- header */
+
+header.app {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-1);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.header-inner {
+  max-width: 1200px; margin: 0 auto; padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.brand { font-weight: 650; font-size: 15px; letter-spacing: -0.01em; }
+.brand span { color: var(--text-muted); font-weight: 400; margin-left: 8px; font-size: 13px; }
+.header-spacer { flex: 1 1 auto; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; padding: 3px 9px; border-radius: 999px;
+  border: 1px solid var(--border); color: var(--text-secondary);
+  background: var(--surface-3); white-space: nowrap;
+}
+.badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
+.badge.warn .dot { background: var(--series-4); }
+
+/* ----------------------------------------------------------------- forms */
+
+button, .btn {
+  font: inherit; font-size: 13px; cursor: pointer;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface-1); color: var(--text-primary);
+  padding: 7px 13px; transition: background 0.12s, border-color 0.12s;
+}
+button:hover, .btn:hover { background: var(--surface-3); }
+button:focus-visible, .btn:focus-visible,
+input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--series-1); outline-offset: 2px;
+}
+button.primary {
+  background: var(--series-1); border-color: transparent; color: #fff; font-weight: 550;
+}
+button.primary:hover { filter: brightness(1.08); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+button.ghost { background: transparent; }
+button.tiny { padding: 3px 8px; font-size: 12px; }
+
+input[type="text"], input[type="number"], input[type="date"], select {
+  font: inherit; font-size: 13px; padding: 6px 9px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface-1); color: var(--text-primary);
+}
+label.field { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--text-secondary); }
+input[type="file"] { display: none; }
+
+/* ----------------------------------------------------------------- cards */
+
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-top: var(--gap);
+}
+.card h2 {
+  margin: 0 0 4px; font-size: 14px; font-weight: 600; letter-spacing: -0.005em;
+}
+.card .sub { margin: 0 0 16px; color: var(--text-secondary); font-size: 12.5px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+
+/* ------------------------------------------------------------- stat tiles */
+
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1px;
+        background: var(--border); border: 1px solid var(--border); border-radius: var(--radius);
+        overflow: hidden; margin-top: var(--gap); }
+.kpi { background: var(--surface-1); padding: 16px 18px; }
+.kpi .label { font-size: 11.5px; color: var(--text-muted); text-transform: uppercase;
+              letter-spacing: 0.04em; margin-bottom: 6px; }
+.kpi .value { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; }
+.kpi.hero .value { font-size: 32px; }
+.kpi .delta { font-size: 12.5px; color: var(--text-secondary); margin-top: 3px; }
+.pos { color: var(--good); }
+.neg { color: var(--bad); }
+
+/* ------------------------------------------------------------------ tabs */
+
+.tabs { display: flex; gap: 2px; margin-top: 22px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.tab {
+  border: none; background: none; padding: 9px 14px; font-size: 13px;
+  color: var(--text-secondary); border-bottom: 2px solid transparent;
+  border-radius: 0; margin-bottom: -1px;
+}
+.tab:hover { background: var(--surface-3); color: var(--text-primary); }
+.tab[aria-selected="true"] { color: var(--text-primary); font-weight: 600; border-bottom-color: var(--series-1); }
+.panel[hidden] { display: none; }
+
+/* ---------------------------------------------------------------- tables */
+
+.table-scroll { overflow-x: auto; margin: 0 -18px; padding: 0 18px; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { padding: 7px 10px; text-align: right; white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+thead th {
+  font-size: 11.5px; font-weight: 600; color: var(--text-secondary);
+  text-transform: uppercase; letter-spacing: 0.03em;
+  border-bottom: 1px solid var(--axis); position: sticky; top: 0; background: var(--surface-1);
+}
+tbody tr { border-bottom: 1px solid var(--grid); }
+tbody tr:hover { background: var(--surface-3); }
+tbody tr:last-child { border-bottom: none; }
+td.num, th.num { font-variant-numeric: tabular-nums; }
+td .sym { font-weight: 600; }
+td .co { color: var(--text-muted); font-size: 12px; display: block; margin-top: 1px;
+         max-width: 240px; overflow: hidden; text-overflow: ellipsis; }
+tfoot td { border-top: 1px solid var(--axis); font-weight: 600; }
+
+/* Year-over-year heatmap cells. The numeric value is always printed, so the
+   diverging color is a second channel and never the only one. */
+td.yoy { font-variant-numeric: tabular-nums; padding: 5px 8px; }
+td.yoy .cell {
+  display: block; border-radius: 4px; padding: 3px 7px; text-align: right;
+  color: var(--div-ink); min-width: 58px;
+}
+td.yoy .cell.partial { outline: 1px dashed var(--axis); outline-offset: -1px; }
+td.yoy .cell.empty { color: var(--text-muted); background: none; }
+
+/* ---------------------------------------------------------------- charts */
+
+/* On a narrow screen the bar chart scrolls sideways rather than being squeezed:
+   forty labelled rows compressed into 390px are unreadable. */
+.chart { margin-top: 4px; overflow-x: auto; margin-left: -18px; margin-right: -18px;
+         padding: 0 18px; }
+.chart svg { display: block; width: 100%; min-width: 760px; height: auto; }
+.bar-row { cursor: default; }
+.bar-row:hover .bar-bg { fill: var(--surface-3); }
+.bar-label { font-size: 12px; fill: var(--text-primary); }
+.bar-sub { font-size: 11px; fill: var(--text-muted); }
+.bar-value { font-size: 12px; fill: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.axis-line { stroke: var(--axis); stroke-width: 1; }
+.grid-line { stroke: var(--grid); stroke-width: 1; }
+.tick-label { font-size: 11px; fill: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+.legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 2px 0 14px; font-size: 12px;
+          color: var(--text-secondary); }
+.legend .item { display: inline-flex; align-items: center; gap: 6px; }
+.legend .swatch { width: 10px; height: 10px; border-radius: 2px; flex: none; }
+
+/* Single stacked bar used for part-to-whole allocation. */
+.stack { display: flex; width: 100%; height: 30px; border-radius: 5px; overflow: hidden; gap: 2px; }
+.stack .seg { height: 100%; min-width: 2px; border-radius: 2px; }
+.stack-legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+                gap: 10px 20px; margin-top: 16px; font-size: 12.5px; }
+.stack-legend .item { display: flex; align-items: flex-start; gap: 8px; min-width: 0; }
+.stack-legend .swatch { margin-top: 4px; }
+.stack-legend .name { display: flex; flex-direction: column; min-width: 0; line-height: 1.35; }
+.stack-legend .name-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.stack-legend .pct { color: var(--text-secondary); font-variant-numeric: tabular-nums; font-size: 12px; }
+
+/* -------------------------------------------------------------- messages */
+
+.notices { margin-top: var(--gap); display: flex; flex-direction: column; gap: 8px; }
+.notice {
+  border: 1px solid var(--border); border-left: 3px solid var(--series-4);
+  background: var(--surface-1); border-radius: var(--radius-sm);
+  padding: 9px 13px; font-size: 12.5px; color: var(--text-secondary);
+}
+.notice.error { border-left-color: var(--bad); color: var(--text-primary); }
+.notice.info { border-left-color: var(--series-1); }
+.empty-state { text-align: center; padding: 48px 16px; color: var(--text-muted); }
+.empty-state h3 { color: var(--text-primary); margin: 0 0 6px; font-size: 15px; }
+
+.hint { font-size: 12px; color: var(--text-muted); margin-top: 10px; }
+.hint code { background: var(--surface-3); padding: 1px 5px; border-radius: 3px;
+             font-size: 11.5px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+.spinner {
+  width: 14px; height: 14px; border: 2px solid var(--border);
+  border-top-color: var(--series-1); border-radius: 50%;
+  display: inline-block; animation: spin 0.7s linear infinite; vertical-align: -2px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2s; } }
+
+.tooltip {
+  position: fixed; z-index: 50; pointer-events: none;
+  background: var(--surface-1); color: var(--text-primary);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 8px 11px; font-size: 12px; max-width: 280px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
+}
+.tooltip[hidden] { display: none; }
+.tooltip .t-title { font-weight: 600; margin-bottom: 4px; }
+.tooltip .t-row { display: flex; justify-content: space-between; gap: 14px; color: var(--text-secondary); }
+.tooltip .t-row b { color: var(--text-primary); font-weight: 550; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 640px) {
+  .header-inner { padding: 10px 16px; }
+  .card { padding: 14px; }
+  .kpi .value { font-size: 20px; }
+  .kpi.hero .value { font-size: 26px; }
+}
