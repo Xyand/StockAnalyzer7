@@ -195,3 +195,20 @@ class TestHoldingsFileUpload:
             files={"file": ("MYETF.csv", io.BytesIO(self.HOLDINGS_CSV.encode()), "text/csv")},
         )
         assert client.delete("/api/holdings-file/MYETF").json()["deleted"] is True
+
+
+class TestDividendsInApi:
+    def test_portfolio_xirr_accounts_for_dividends(self, client):
+        """A high-yield holding must not report its price-only return."""
+        body = client.post("/api/analyze", json={
+            "lots": [{"symbol": "SCHD", "quantity": 220, "cost_per_share": 68.30,
+                      "purchase_date": "2022-07-22"}],
+        }).json()
+        holding = body["holdings"][0]
+        # SCHD yields ~3.5% in the fixture set; a price-only figure would land
+        # near 4%, and the dividend-aware one materially above it.
+        assert holding["annualized_return"] > holding["ttm_market_return"] - 0.10
+        assert holding["annualized_return"] > 0.06
+        assert body["summary"]["annualized_return"] == pytest.approx(
+            holding["annualized_return"], abs=0.005
+        ), "a single-holding portfolio's XIRR should match that holding's"

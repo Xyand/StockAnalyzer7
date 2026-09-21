@@ -181,6 +181,48 @@ def calendar_year_returns(series: PriceSeries, years: list[int]) -> dict[int, Ye
 # Position-level returns
 # --------------------------------------------------------------------------
 
+def dividend_flows(
+    lots: list[Lot],
+    series: PriceSeries,
+    start: date | None,
+    end: date,
+) -> list[tuple[date, float]]:
+    """Dividend cash received on a position between two dates.
+
+    Providers do not hand us a dividend schedule alongside the price history,
+    but they do give both the raw close and the dividend-adjusted close. Over
+    one step the two move together except for the dividend, so the payment per
+    share is recoverable:
+
+        div = close_prev * (adj_close_now / adj_close_prev
+                            - close_now / close_prev)
+
+    Each payment is dated where it actually fell and multiplied by the shares
+    held at the time, so a lot bought halfway through collects only the
+    dividends paid after it was bought — which is what makes the money-weighted
+    return come out right.
+    """
+    dated = [lot for lot in lots if lot.purchase_date is not None]
+    if not dated or len(series.points) < 2:
+        return []
+
+    flows: list[tuple[date, float]] = []
+    for previous, current in zip(series.points, series.points[1:]):
+        if current.date > end or (start is not None and current.date <= start):
+            continue
+        if previous.close <= 0 or previous.adj_close <= 0:
+            continue
+        per_share = previous.close * (
+            current.adj_close / previous.adj_close - current.close / previous.close
+        )
+        if per_share <= 0:
+            continue
+        quantity = sum(lot.quantity for lot in dated if lot.purchase_date <= previous.date)
+        if quantity > 0:
+            flows.append((current.date, quantity * per_share))
+    return flows
+
+
 def position_cashflows(
     lots: list[Lot],
     series: PriceSeries,
@@ -214,8 +256,12 @@ def position_cashflows(
             )
         flows.append((lot.purchase_date, -cost * lot.quantity))
 
-    if flows and market_value:
-        flows.append((valuation_date, market_value))
+    if flows:
+        # Dividends are real cash the position returned; leaving them out
+        # understates a high-yield holding by roughly its yield every year.
+        flows.extend(dividend_flows(lots, series, None, valuation_date))
+        if market_value:
+            flows.append((valuation_date, market_value))
     return flows, warnings
 
 
@@ -268,14 +314,9 @@ def position_year_return(
     closing_qty = opening_qty + sum(lot.quantity for lot in during)
     flows.append((close_point.date, closing_qty * close_point.close))
 
-    # Dividends received during the year, approximated from the gap between
-    # price return and total return on the adjusted series.
-    if open_point is not None and open_point.close > 0 and open_point.adj_close > 0:
-        price_ret = close_point.close / open_point.close - 1.0
-        total_ret = close_point.adj_close / open_point.adj_close - 1.0
-        income_ret = total_ret - price_ret
-        if income_ret > 0:
-            flows.append((close_point.date, opening_qty * open_point.close * income_ret))
+    # Dividends paid during the year, credited to whoever held the shares when
+    # each one fell — including lots bought partway through the year.
+    flows.extend(dividend_flows(lots, series, date(year - 1, 12, 31), year_end))
 
     rate = xirr(flows)
     held_full_year = opening_qty > 0 and year_end >= date(year, 12, 20)

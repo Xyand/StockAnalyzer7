@@ -75,6 +75,34 @@ Both appear in the year-by-year table; the toggle above it switches between
 them. The **Annualized (XIRR)** figure on the summary tiles is the money-weighted
 return across every lot in the portfolio.
 
+### Dividends
+
+Providers hand back two price series: the raw `close`, and an `adj_close` that
+rewrites history as though every dividend had been reinvested. The gap between
+them is the dividend, and which one a calculation uses decides whether income
+is counted:
+
+| Figure | Series | Dividends |
+|---|---|---|
+| The security's yearly and 12-month return | `adj_close` | included |
+| Position value and unrealized gain | `close` | excluded — correctly, since the cash was paid out, not retained in the position |
+| Your return on the position (yearly and annualized) | both | included, as dated cash flows |
+
+For the money-weighted figures the dividend is reconstructed per period from
+the two series (`dividend_flows` in `services/returns.py`), dated where it
+actually fell and credited only to shares held at the time — so a lot bought in
+November does not collect a dividend paid in July.
+
+This matters most where you would least like to be wrong. A bond fund like
+`BND`, measured on price alone, reports −3.6% a year; with its coupons counted
+it is −0.7%. `SCHD` goes from 5.3% to 9.0%.
+
+Note that a money-weighted return and a reinvested total return will not match
+exactly even when both count dividends — the first treats a dividend as cash
+returned to you on the day, the second as shares bought that day. On a
+high-yield holding through a volatile stretch the two can differ by a point or
+two, and neither is wrong; they answer different questions.
+
 Some deliberate choices:
 
 - A partial year is **flagged, not annualized.** Annualizing three months of

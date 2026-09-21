@@ -5,6 +5,8 @@ import pytest
 from backend.app.models import Lot, PricePoint
 from backend.app.services.returns import (
     PriceSeries,
+    dividend_flows,
+    position_cashflows,
     annualize,
     calendar_year_returns,
     position_year_return,
@@ -170,3 +172,66 @@ class TestStaleData:
         series = _series([(date(2024, 12, 27), 100.0)])
         lots = [Lot(symbol="X", quantity=10, cost_per_share=50.0, purchase_date=date(2023, 1, 5))]
         assert position_year_return(lots, series, 2025, date(2025, 9, 20)) == (None, False)
+
+
+class TestDividends:
+    """Dividends are recovered from the gap between the raw and adjusted close,
+    because providers hand us both series but no payment schedule."""
+
+    @staticmethod
+    def _payer(dividend_per_share=5.0):
+        # Price flat at 100 all year; one 5.00 dividend in July.
+        points = [
+            PricePoint(date=date(2023, 12, 29), close=100.0, adj_close=95.0),
+            PricePoint(date=date(2024, 6, 28), close=100.0, adj_close=95.0),
+            PricePoint(date=date(2024, 7, 5), close=100.0, adj_close=95.0 + dividend_per_share * 0.95),
+            PricePoint(date=date(2024, 12, 27), close=100.0, adj_close=95.0 + dividend_per_share * 0.95),
+        ]
+        return PriceSeries(points)
+
+    def test_payment_is_recovered_with_the_right_date_and_size(self):
+        series = self._payer()
+        lots = [Lot(symbol="D", quantity=10, cost_per_share=100.0, purchase_date=date(2023, 6, 1))]
+        flows = dividend_flows(lots, series, None, date(2024, 12, 31))
+        assert len(flows) == 1
+        when, amount = flows[0]
+        assert when == date(2024, 7, 5)
+        assert amount == pytest.approx(50.0, rel=1e-3)   # 10 shares x 5.00
+
+    def test_a_lot_bought_after_the_payment_does_not_collect_it(self):
+        series = self._payer()
+        lots = [Lot(symbol="D", quantity=10, cost_per_share=100.0, purchase_date=date(2024, 9, 1))]
+        assert dividend_flows(lots, series, None, date(2024, 12, 31)) == []
+
+    def test_only_shares_held_at_the_time_are_paid(self):
+        series = self._payer()
+        lots = [
+            Lot(symbol="D", quantity=10, cost_per_share=100.0, purchase_date=date(2023, 6, 1)),
+            Lot(symbol="D", quantity=90, cost_per_share=100.0, purchase_date=date(2024, 11, 1)),
+        ]
+        flows = dividend_flows(lots, series, None, date(2024, 12, 31))
+        # Only the original 10 shares were held in July.
+        assert flows[0][1] == pytest.approx(50.0, rel=1e-3)
+
+    def test_a_non_payer_produces_no_flows(self):
+        series = _series([(date(2024, 1, 5), 100.0), (date(2024, 12, 27), 130.0)])
+        lots = [Lot(symbol="N", quantity=10, cost_per_share=100.0, purchase_date=date(2024, 1, 5))]
+        assert dividend_flows(lots, series, None, date(2024, 12, 31)) == []
+
+    def test_undated_lots_collect_nothing(self):
+        lots = [Lot(symbol="D", quantity=10, cost_per_share=100.0)]
+        assert dividend_flows(lots, self._payer(), None, date(2024, 12, 31)) == []
+
+    def test_a_flat_price_dividend_payer_still_shows_a_return(self):
+        """The whole point: on price alone this position looks dead flat."""
+        series = self._payer()
+        lots = [Lot(symbol="D", quantity=10, cost_per_share=100.0, purchase_date=date(2023, 12, 29))]
+        flows, _ = position_cashflows(lots, series, date(2024, 12, 27), 1000.0)
+        rate = xirr(flows)
+        assert rate is not None and rate > 0.04, "a 5% yield must not report as 0%"
+
+    def test_window_bounds_are_respected(self):
+        series = self._payer()
+        lots = [Lot(symbol="D", quantity=10, cost_per_share=100.0, purchase_date=date(2023, 1, 1))]
+        assert dividend_flows(lots, series, date(2024, 8, 1), date(2024, 12, 31)) == []
+        assert len(dividend_flows(lots, series, date(2023, 12, 31), date(2024, 12, 31))) == 1

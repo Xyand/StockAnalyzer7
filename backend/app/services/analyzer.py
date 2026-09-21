@@ -15,6 +15,7 @@ from ..models import (
 from ..providers import MarketData, ProviderError
 from .returns import (
     PriceSeries,
+    dividend_flows,
     annualize,
     calendar_year_returns,
     position_cashflows,
@@ -44,11 +45,13 @@ class PortfolioAnalyzer:
         holdings: list[HoldingAnalysis] = []
         series_by_symbol: dict[str, PriceSeries] = {}
 
+        income_flows: list[tuple[date, float]] = []
         for position in positions:
             analysis, series = self._analyze_position(position, start, today)
             holdings.append(analysis)
             if series:
                 series_by_symbol[position.symbol] = series
+                income_flows.extend(dividend_flows(position.lots, series, None, today))
 
         total_value = sum(h.market_value or 0.0 for h in holdings)
         cash_total = sum(portfolio.cash.values())
@@ -61,7 +64,7 @@ class PortfolioAnalyzer:
             warnings.extend(holding.warnings)
 
         years = self._covered_years(holdings)
-        summary = self._summarize(portfolio, holdings, total_value, total_cost, today)
+        summary = self._summarize(portfolio, holdings, total_value, total_cost, today, income_flows)
 
         notes = list(self.md.notes)
         return AnalysisResponse(
@@ -184,6 +187,7 @@ class PortfolioAnalyzer:
         total_value: float,
         total_cost: float,
         today: date,
+        income_flows: list[tuple[date, float]] | None = None,
     ) -> PortfolioSummary:
         unrealized = total_value - total_cost
 
@@ -201,8 +205,11 @@ class PortfolioAnalyzer:
             for lot in portfolio.lots
             if lot.purchase_date and lot.cost_per_share is not None
         ]
-        if all_flows and total_value:
-            all_flows.append((today, total_value))
+        if all_flows:
+            # Dividends across every holding, on the dates they were paid.
+            all_flows.extend(income_flows or [])
+            if total_value:
+                all_flows.append((today, total_value))
         portfolio_rate = xirr(all_flows) if all_flows else None
 
         return PortfolioSummary(
