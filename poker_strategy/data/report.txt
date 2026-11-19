@@ -1,0 +1,18 @@
+== Solver validation (heads-up, no ante; published Nash @10bb: SB ~58%, BB ~37%)
+   SB shove 58.3%   BB call 37.4%
+
+== 8-max Nash shove % (BB ante 1bb)  vs  simple-rule shove %
+S          UTG       UTG1         LJ         HJ         CO        BTN         SB
+5      47%/30%    48%/34%    48%/36%    50%/40%    53%/48%    60%/57%    83%/82%
+8      24%/21%    26%/24%    28%/26%    32%/30%    36%/36%    47%/44%    76%/72%
+10     18%/16%    21%/19%    23%/21%    28%/24%    33%/30%    43%/36%    71%/65%
+12     15%/16%    17%/19%    20%/21%    25%/24%    31%/30%    40%/36%    67%/65%
+15     12%/16%    14%/19%    17%/21%    21%/24%    28%/30%    36%/36%    62%/65%
+
+== EV loss vs exact Nash, bb per 100 folded-to spots, stacks 5-15bb, all seats
+   Simple shove rule (formula lines):           0.75  (worst spot 4.40)
+   All-in Score w/ per-spot optimal line:       0.47
+   Best possible single hand ranking:           0.27
+   Chen formula w/ per-spot optimal line:       3.86
+   Simple call rule:                            1.12  (worst spot 12.55)
+   Re-shove rule (open line +5), 12-25bb:       1.01  (per-spot optimal line 0.53)

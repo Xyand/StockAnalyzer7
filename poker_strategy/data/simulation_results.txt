@@ -1,0 +1,17 @@
+Hero results in bb/100 hands (8-max, BB ante, 300000 hands per stack depth, stacks [5, 8, 10, 12, 15])
+
+Nash field
+  Nash hero   +0.29   Simple hero   +1.48   diff +1.20 ± 0.19
+  by stack: 5bb N+0.8/S+2.7  8bb N+0.5/S+1.6  10bb N-0.1/S+1.1  12bb N+0.2/S+1.9  15bb N-0.0/S+0.1
+
+Nit field (shoves +6 tight, calls +6 tight)
+  Nash hero   +2.89   Simple hero   +4.56   diff +1.67 ± 0.14
+  by stack: 5bb N-2.3/S+0.4  8bb N+2.7/S+4.3  10bb N+5.6/S+5.6  12bb N+4.7/S+7.4  15bb N+3.7/S+5.1
+
+Calling station field (shoves +4 tight, calls -8 loose)
+  Nash hero   +9.60   Simple hero  +11.60   diff +2.00 ± 0.19
+  by stack: 5bb N+1.0/S+3.7  8bb N+7.7/S+10.1  10bb N+10.8/S+12.4  12bb N+11.5/S+14.6  15bb N+17.0/S+17.3
+
+Maniac field (shoves -8 loose, calls -4 loose)
+  Nash hero   +2.91   Simple hero   +3.16   diff +0.25 ± 0.16
+  by stack: 5bb N-2.3/S+0.4  8bb N+2.2/S+2.0  10bb N+3.3/S+3.3  12bb N+4.4/S+2.7  15bb N+7.0/S+7.4
